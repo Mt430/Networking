@@ -28,6 +28,24 @@ namespace olc
 				return deqQueue.back();
 			}
 
+			// Removes and returns item from front of Queue
+			T pop_front()
+			{
+				std::scoped_lock lock(muxQueue);
+				auto t = std::move(deqQueue.front());
+				deqQueue.pop_front();
+				return t;
+			}
+
+			// Removes and returns item from back of Queue
+			T pop_back()
+			{
+				std::scoped_lock lock(muxQueue);
+				auto t = std::move(deqQueue.back());
+				deqQueue.pop_back();
+				return t;
+			}
+
 			// Adds an item to back of Queue
 			void push_back(const T& item)
 			{
@@ -36,7 +54,7 @@ namespace olc
 			}
 
 			// Adds an item to front of Queue
-			void push_back(const T& item)
+			void push_front(const T& item)
 			{
 				std::scoped_lock lock(muxQueue);
 				deqQueue.emplace_front(std::move(item));
@@ -61,24 +79,6 @@ namespace olc
 			{
 				std::scoped_lock lock(muxQueue);
 				deqQueue.clear();
-			}
-
-			// Removes and returns item from front of Queue
-			T pop_front()
-			{
-				std::scoped_lock lock(muxQueue);
-				auto t = std::move(deqQueue.front());
-				deqQueue.pop_front();
-				return t;
-			}
-
-			// Removes and returns item from back of Queue
-			T pop_front()
-			{
-				std::scoped_lock lock(muxQueue);
-				auto t = std::move(deqQueue.back());
-				deqQueue.pop_back();
-				return t;
 			}
 
 		protected:

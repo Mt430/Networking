@@ -23,7 +23,7 @@ namespace olc
 			// Returns size of entire message packet in bytes
 			size_t size() const
 			{
-				return sizeof(message_header<T>) + body.size();
+				return body.size();
 			}
 
 			// Override for std::out compatability - produces friendly description of message
