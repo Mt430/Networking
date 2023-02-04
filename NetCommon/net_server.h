@@ -75,7 +75,7 @@ namespace olc
 								// Connection allowed, so add to container of new connections
 								m_deqConnections.push_back(std::move(newconn));
 
-								m_deqConnections.back()->ConnectToClient(nIDCounter++);
+								m_deqConnections.back()->ConnectToClient(this, nIDCounter++);
 
 								std::cout << "[" << m_deqConnections.back()->GetID() << "] Connection Approved\n";
 
@@ -147,6 +147,8 @@ namespace olc
 			// Force server to respond to incoming messages
 			void Update(size_t nMaxMessages = -1, bool bWait = false)
 			{
+				// We don't need the server to occupy 100% of the cpu core
+				// so this makes the server sleep if there are no incoming messages
 				if (bWait) m_qMessagesIn.wait();
 
 				// Process as many messages as you can up to the value
@@ -184,6 +186,14 @@ namespace olc
 			{
 
 			}
+
+		public:
+			// Called when a client  is validated
+			virtual void OnClientValidated(std::shared_ptr<connection<T>> client)
+			{
+
+			}
+
 
 		protected:
 			// Thread Safe Queue for incoming message packets
