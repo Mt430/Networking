@@ -1,4 +1,5 @@
 #pragma once
+
 #include "net_common.h"
 
 namespace olc
@@ -14,7 +15,7 @@ namespace olc
 			virtual ~tsqueue() { clear(); }
 
 		public:
-			// Returns and maintains item at front of Queue 
+			// Returns and maintains item at front of Queue
 			const T& front()
 			{
 				std::scoped_lock lock(muxQueue);
@@ -65,12 +66,12 @@ namespace olc
 				std::unique_lock<std::mutex> ul(muxBlocking);
 				cvBlocking.notify_one();
 			}
-			
+
 			// Returns true if Queue has no items
 			bool empty()
 			{
 				std::scoped_lock lock(muxQueue);
-				return deqQueue.size();
+				return deqQueue.empty();
 			}
 
 			// Returns number of items in Queue
