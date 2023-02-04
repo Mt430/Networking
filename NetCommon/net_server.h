@@ -35,7 +35,7 @@ namespace olc
 				catch (std::exception& e)
 				{
 					// Something prohibited the server from listening 
-					std::cerr << "[SERVER] Exception: " << e.what() << "/n";
+					std::cerr << "[SERVER] Exception: " << e.what() << "\n";
 					return false;
 				}
 
@@ -95,8 +95,7 @@ namespace olc
 						// another connection
 						WaitForClientConnection();
 
-					}
-				);
+					});
 			}
 
 			// Send a message to a specific client
@@ -145,8 +144,13 @@ namespace olc
 
 			}
 
-			void Update(size_t nMaxMessages = std::numeric_limits<size_t>::min())
+			// Force server to respond to incoming messages
+			void Update(size_t nMaxMessages = std::numeric_limits<size_t>::min(), bool bWait = false)
 			{
+				if (bWait) m_qMessagesIn.wait();
+
+				// Process as many messages as you can up to the value
+				// specified
 				size_t nMessageCount = 0;
 				while (nMessageCount < nMaxMessages && !m_qMessagesIn.empty())
 				{

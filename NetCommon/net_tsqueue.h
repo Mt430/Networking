@@ -51,6 +51,9 @@ namespace olc
 			{
 				std::scoped_lock lock(muxQueue);
 				deqQueue.emplace_back(std::move(item));
+
+				std::unique_lock<std::mutex> ul(muxBlocking);
+				cvBlocking.notify_one();
 			}
 
 			// Adds an item to front of Queue
@@ -58,6 +61,9 @@ namespace olc
 			{
 				std::scoped_lock lock(muxQueue);
 				deqQueue.emplace_front(std::move(item));
+
+				std::unique_lock<std::mutex> ul(muxBlocking);
+				cvBlocking.notify_one();
 			}
 			
 			// Returns true if Queue has no items
@@ -81,10 +87,20 @@ namespace olc
 				deqQueue.clear();
 			}
 
+			void wait()
+			{
+				while (empty())
+				{
+					std::unique_lock<std::mutex> ul(muxBlocking);
+					cvBlocking.wait(ul);
+				}
+			}
+
 		protected:
 			std::mutex muxQueue;
 			std::deque<T> deqQueue;
-
+			std::condition_variable cvBlocking;
+			std::mutex muxBlocking;
 		};
 	}
 }
