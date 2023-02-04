@@ -70,9 +70,9 @@ namespace olc
 			bool empty()
 			{
 				std::scoped_lock lock(muxQueue);
-				return deqQueue.size();
+				return deqQueue.empty();
 			}
-
+			
 			// Returns number of items in Queue
 			size_t count()
 			{

@@ -145,7 +145,7 @@ namespace olc
 			}
 
 			// Force server to respond to incoming messages
-			void Update(size_t nMaxMessages = std::numeric_limits<size_t>::min(), bool bWait = false)
+			void Update(size_t nMaxMessages = -1, bool bWait = false)
 			{
 				if (bWait) m_qMessagesIn.wait();
 
